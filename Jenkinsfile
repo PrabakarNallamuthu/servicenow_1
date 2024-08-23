@@ -13,9 +13,7 @@ pipeline {
   stages {
     stage('Build') {
       when {
-        not {
           branch 'master'
-        }
       }
       steps {
         snApplyChanges(appSysId: "${APPSYSID}", branchName: "${BRANCH}", url: "${DEVENV}", credentialsId: "${CREDENTIALSDEV}")
@@ -24,9 +22,7 @@ pipeline {
     }
     stage('Test') {
       when {
-        not {
           branch 'master'
-        }
       }
       steps {
         snInstallApp(credentialsId: "${CREDENTIALSTEST}", url: "${TESTENV}", appSysId: "${APPSYSID}")
