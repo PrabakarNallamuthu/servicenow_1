@@ -3,7 +3,8 @@ pipeline {
   environment {
     APPSYSID = '27d0e777c3805650a28cfeac05013197'
     BRANCH = "${BRANCH_NAME}"
-    CREDENTIALS = 'ServiceNow'
+    CREDENTIALSDEV = 'servicenow'
+    CREDENTIALSTEST = 'ServiceNow'
     DEVENV = 'https://dev263447.service-now.com/'
     TESTENV = 'https://dev196634.service-now.com/'
     PRODENV = 'https://dev196634.service-now.com/'
@@ -17,8 +18,8 @@ pipeline {
         }
       }
       steps {
-        snApplyChanges(appSysId: "${APPSYSID}", branchName: "${BRANCH}", url: "${DEVENV}", credentialsId: "${CREDENTIALS}")
-        snPublishApp(credentialsId: "${CREDENTIALS}", appSysId: "${APPSYSID}", obtainVersionAutomatically: true, url: "${DEVENV}")
+        snApplyChanges(appSysId: "${APPSYSID}", branchName: "${BRANCH}", url: "${DEVENV}", credentialsId: "${CREDENTIALSDEV}")
+        snPublishApp(credentialsId: "${CREDENTIALSDEV}", appSysId: "${APPSYSID}", obtainVersionAutomatically: true, url: "${DEVENV}")
       }
     }
     stage('Test') {
@@ -28,8 +29,8 @@ pipeline {
         }
       }
       steps {
-        snInstallApp(credentialsId: "${CREDENTIALS}", url: "${TESTENV}", appSysId: "${APPSYSID}")
-        // snRunTestSuite(credentialsId: "${CREDENTIALS}", url: "${TESTENV}", testSuiteSysId: "${TESTSUITEID}", withResults: true)
+        snInstallApp(credentialsId: "${CREDENTIALSTEST}", url: "${TESTENV}", appSysId: "${APPSYSID}")
+        // snRunTestSuite(credentialsId: "${CREDENTIALSTEST}", url: "${TESTENV}", testSuiteSysId: "${TESTSUITEID}", withResults: true)
       }
     }
     stage('Deploy to Prod') {
@@ -37,7 +38,7 @@ pipeline {
         branch 'master'
       }
       steps {
-        snInstallApp(credentialsId: "${CREDENTIALS}", url: "${PRODENV}", appSysId: "${APPSYSID}")
+        snInstallApp(credentialsId: "${CREDENTIALSTEST}", url: "${PRODENV}", appSysId: "${APPSYSID}")
       }
     }
   }
